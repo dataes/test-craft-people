@@ -70,7 +70,7 @@ security:
                     - lexik_jwt_authentication.jwt_token_authenticator
 
         main:
-#            anonymous: true
+            # anonymous: true
 
             # activate different ways to authenticate
 
@@ -91,5 +91,5 @@ security:
             logout:
                 path:   fos_user_security_logout
                 target: fos_user_security_login
-#            logout:       true
+            # logout:       true
             anonymous:    true
