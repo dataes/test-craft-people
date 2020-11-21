@@ -3,31 +3,40 @@
 namespace App\Security;
 
 use App\Entity\User;
-use LogicException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 
 class UserVoter extends Voter
 {
-    // these strings are just invented: you can use anything
-    const VIEW = 'view';
-    const EDIT = 'edit';
+    const CAN_INITIALIZE_DECK = 'canInitialiseDeck';
+    const CAN_PICK_CARD = 'canPickCard';
 
+    /**
+     * @var AccessDecisionManagerInterface
+     */
     private $decisionManager;
 
+    /**
+     * UserVoter constructor.
+     * @param AccessDecisionManagerInterface $decisionManager
+     */
     public function __construct(AccessDecisionManagerInterface $decisionManager)
     {
         $this->decisionManager = $decisionManager;
     }
 
+    /**
+     * @param string $attribute
+     * @param mixed $subject
+     * @return bool
+     */
     protected function supports($attribute, $subject)
     {
         // if the attribute isn't one we support, return false
-        if (!in_array($attribute, array(self::VIEW, self::EDIT))) {
+        if (!in_array($attribute, [self::CAN_INITIALIZE_DECK, self::CAN_PICK_CARD])) {
             return false;
         }
-
         // only vote on User objects inside this voter
         if (!$subject instanceof User) {
             return false;
@@ -36,6 +45,12 @@ class UserVoter extends Voter
         return true;
     }
 
+    /**
+     * @param string $attribute
+     * @param mixed $subject
+     * @param TokenInterface $token
+     * @return bool
+     */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
         $user = $token->getUser();
@@ -45,41 +60,33 @@ class UserVoter extends Voter
             return false;
         }
 
-        // ROLE_SYSTEM can do anything! The power!
-        if ($this->decisionManager->decide($token, array('ROLE_SYSTEM'))) {
-            return true;
-        }
-
-        // you know $subject is a User object, thanks to supports
-        /** @var User $userSubject */
-        $userSubject = $subject;
-
         switch ($attribute) {
-            case self::VIEW:
-                return $this->canView($userSubject, $user);
-            case self::EDIT:
-                return $this->canEdit($userSubject, $user);
+            case self::CAN_INITIALIZE_DECK:
+                return $this->canInitializeDeck($user);
+            case self::CAN_PICK_CARD:
+                return $this->canPickCard($user);
+            default:
+                return false;
         }
-
-        throw new LogicException('This code should not be reached!');
     }
 
-    private function canView(User $userSubject, User $user)
+    /**
+     * @param User $user
+     * @return bool
+     */
+    private function canInitializeDeck(User $user)
     {
-        // if they can edit, they can view
-        if ($this->canEdit($userSubject, $user)) {
-            return true;
-        }
-
-        // the User object could have, for example, a method isPrivate()
-        // that checks a boolean $private property
-        return $user === $userSubject;
+        // ROLE_SYSTEM can initialize a deck, can not pick a card.
+        return in_array('ROLE_SYSTEM', $user->getRoles());
     }
 
-    private function canEdit(User $userSubject, User $user)
+    /**
+     * @param User $user
+     * @return bool
+     */
+    private function canPickCard(User $user)
     {
-        // this assumes that the data object has a getOwner() method
-        // to get the entity of the user who owns this data object
-        return $user === $userSubject;
+        // ROLE_PLAYER can pick a card, can not initialize a deck.
+        return in_array('ROLE_PLAYER', $user->getRoles());
     }
 }
