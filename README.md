@@ -41,11 +41,13 @@ You have 2,5 weeks to accomplish the assignment.
 
 When you are finished, create a `Pull Request` and mention `@SerkanYildiz` in it. 
 
+
+_**PS:** note : @SerkanYildiz I put all the base of the app already in main branch, and I did create a staging branch for the rest, then I will be able to submit a PR on the end _
+
 We will then review your assignment and do a Code Review together.
 
 
-===========================================================================================
-
+==============================================================
 
 SETUP
 ========
