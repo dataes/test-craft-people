@@ -72,7 +72,7 @@ class ApiAuthControllerTest extends AbstractController
             ->getRepository(User::class)
             ->findOneBy(['username' => $username]);
         // user is not created
-        $this->assertEquals( null, $user);
+        $this->assertEquals(null, $user);
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
 

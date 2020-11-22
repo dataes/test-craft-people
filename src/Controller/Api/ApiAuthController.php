@@ -29,7 +29,7 @@ class ApiAuthController extends AbstractController
      *
      * @SWG\Response(
      *     response=200,
-     *     description="Create a new user with a role as player and return a JWT"
+     *     description="Create a new user player and redirect to login endpoint"
      * )
      * @SWG\Parameter(
      *     name="body",
@@ -86,7 +86,17 @@ class ApiAuthController extends AbstractController
         try {
             $userManager->updateUser($user);
         } catch (Exception $e) {
-            return new JsonResponse(["error" => $e->getMessage()], 500);
+            // todo : implement hateoas-bundle
+            // todo + fix when nothing is send in body
+            $data = [
+                "message" => "Player is already registered, use the following link :",
+                "links" => [
+                    "href" => "http://localhost:8000/api/auth/login",
+                    "rel" => "login",
+                    "type" => "POST",
+                ]
+            ];
+            return new JsonResponse($data, 500);
         }
 
         # Code 307 preserves the request method, while redirectToRoute() is a shortcut method.
@@ -94,5 +104,39 @@ class ApiAuthController extends AbstractController
             'username' => $data['username'],
             'password' => $data['password'],
         ], 307);
+    }
+
+    /**
+     * @Route("/login", name="api_auth_login",  methods={"POST"})
+     *
+     * @SWG\Response(
+     *     response=200,
+     *     description="Log into the application and receive a new JWT"
+     * )
+     * @SWG\Parameter(
+     *     name="body",
+     *     in="body",
+     *     required=true,
+     *     description="Send parameters in body with a JSON format like :",
+     *
+     *     @SWG\Schema(
+     *     type="object",
+     *     example={"username": "john", "password": "doe", "email":"johnDoe@gmail.com"},
+     *         @SWG\Property(property="username", type="string"),
+     *         @SWG\Property(property="password", type="string"),
+     *         @SWG\Property(property="email", type="string")
+     *     )
+     * )
+     * @SWG\Tag(name="Login")
+     * @Security(name="Bearer")
+     *
+     * @param Request $request
+     * @param UserManagerInterface $userManager
+     * @return JsonResponse|RedirectResponse
+     */
+    public function login(Request $request, UserManagerInterface $userManager)
+    {
+        // todo hack to show the doc of login but it doesn't go here
+        // todo + fix when nothing is send in body, loop
     }
 }
