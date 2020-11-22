@@ -113,7 +113,7 @@ To clear the cache, run the script with the environment parameter
 
 `bash cacl.sh dev`
 
-## Tests
+## Tests (todo)
 Shell into the PHP container
 
 `docker-compose exec php-fpm bash`
@@ -121,5 +121,10 @@ Shell into the PHP container
 Then run the script to run tests without debug
 
 `bash runtests.sh`
+
+Include 'debug' parameter to run with debug
+
+`bash runtests.sh debug`
+
 
 
