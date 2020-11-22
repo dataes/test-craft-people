@@ -40,7 +40,6 @@ If you have a question please make an issue with the `question` label and mentio
 You have 2,5 weeks to accomplish the assignment.
 
 When you are finished, create a `Pull Request` and mention `@SerkanYildiz` in it. 
-_**PS:** note : @SerkanYildiz I put the framework base in 'main' branch, and I have created a 'master' branch for the rest.
 
 We will then review your assignment and do a Code Review together.
 
