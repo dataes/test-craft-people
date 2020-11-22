@@ -137,43 +137,4 @@ class ApiAuthControllerTest extends AbstractController
         $this->assertEquals(null, $user);
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
-
-
-//        $users = $this->loadFixture(new UsersFixtures());
-
-
-    // register() unit tests
-
-//    public function test_supports_return_false_if_attribute_is_not_supported()
-//    {
-//        $subject = new User();
-//        $attribute = $this->faker->name;
-//
-//        $reflectedMethod = $this->reflectSupportsMethod();
-//
-//        $this->assertEquals(
-//            false,
-//            $reflectedMethod->invokeArgs(
-//                $this->userVoter,
-//                [$attribute, $subject]
-//            )
-//        );
-//    }
-
-
-//    // reflected Protected Methods
-//
-//    /**
-//     * @return ReflectionMethod
-//     */
-//    private function reflectSupportsMethod(): ReflectionMethod
-//    {
-////        $reflectedMethod = new ReflectionMethod(
-////            UserVoter::class,
-////            'supports'
-////        );
-////        $reflectedMethod->setAccessible(true);
-////
-////        return $reflectedMethod;
-//    }
 }
