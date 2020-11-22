@@ -3,16 +3,22 @@
 namespace App\Controller\Api;
 
 use Exception;
+use App\Entity\User;
 use FOS\UserBundle\Model\UserManagerInterface;
+use Nelmio\ApiDocBundle\Annotation\Security;
+use Swagger\Annotations as SWG;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use App\Entity\User;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validation;
-use Symfony\Component\Validator\Constraints as Assert;
-
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Collection;
 /**
  * @Route("/auth")
  */
@@ -20,6 +26,28 @@ class ApiAuthController extends AbstractController
 {
     /**
      * @Route("/register", name="api_auth_register",  methods={"POST"})
+     *
+     * @SWG\Response(
+     *     response=200,
+     *     description="Create a new user with a role as player and return a JWT"
+     * )
+     * @SWG\Parameter(
+     *     name="body",
+     *     in="body",
+     *     required=true,
+     *     description="Send parameters in body with a JSON format like :",
+     *
+     *     @SWG\Schema(
+     *     type="object",
+     *     example={"username": "john", "password": "doe", "email":"johnDoe@gmail.com"},
+     *         @SWG\Property(property="username", type="string"),
+     *         @SWG\Property(property="password", type="string"),
+     *         @SWG\Property(property="email", type="string")
+     *     )
+     * )
+     * @SWG\Tag(name="Register")
+     * @Security(name="Bearer")
+     *
      * @param Request $request
      * @param UserManagerInterface $userManager
      * @return JsonResponse|RedirectResponse
@@ -33,17 +61,17 @@ class ApiAuthController extends AbstractController
 
         $validator = Validation::createValidator();
 
-        $constraint = new Assert\Collection(array(
+        $constraint = new Collection(array(
             // the keys correspond to the keys in the input array
-            'username' => new Assert\Length(array('min' => 1)),
-            'password' => new Assert\Length(array('min' => 1)),
-            'email' => new Assert\Email(),
+            'username' => [new Length(['min' => 4]), new NotBlank(), new NotNull()],
+            'password' => [new Length(['min' => 4]), new NotBlank(), new NotNull()],
+            'email' => [new Email(), new NotBlank(), new NotNull()]
         ));
 
         $violations = $validator->validate($data, $constraint);
 
         if ($violations->count() > 0) {
-            return new JsonResponse(["error" => (string)$violations], 500);
+            return new JsonResponse(["error" => (string)$violations], Response::HTTP_BAD_REQUEST);
         }
 
         $user = new User();
