@@ -19,6 +19,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Collection;
+
 /**
  * @Route("/auth")
  */
@@ -40,9 +41,9 @@ class ApiAuthController extends AbstractController
      *     @SWG\Schema(
      *     type="object",
      *     example={"username": "john", "password": "doe", "email":"johnDoe@gmail.com"},
-     *         @SWG\Property(property="username", type="string"),
-     *         @SWG\Property(property="password", type="string"),
-     *         @SWG\Property(property="email", type="string")
+     *         @SWG\Property(property="username", type="string", minLength=3),
+     *         @SWG\Property(property="password", type="string", minLength=3),
+     *         @SWG\Property(property="email", type="email")
      *     )
      * )
      * @SWG\Tag(name="Register")
@@ -59,13 +60,24 @@ class ApiAuthController extends AbstractController
             true
         );
 
+        if (empty($data)) {
+
+            $data = [
+                "message" => "Please do not forget to send the body request",
+                "links" => [
+                    "href" => "http://localhost:8000/api/doc",
+                ],
+            ];
+
+            return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
+        }
+
         $validator = Validation::createValidator();
 
         $constraint = new Collection(array(
-            // the keys correspond to the keys in the input array
-            'username' => [new Length(['min' => 4]), new NotBlank(), new NotNull()],
-            'password' => [new Length(['min' => 4]), new NotBlank(), new NotNull()],
-            'email' => [new Email(), new NotBlank(), new NotNull()]
+            'username' => [new Length(['min' => 3]), new NotBlank(), new NotNull()],
+            'password' => [new Length(['min' => 3]), new NotBlank(), new NotNull()],
+            'email' => [new Email(), new NotBlank(), new NotNull()],
         ));
 
         $violations = $validator->validate($data, $constraint);
@@ -84,18 +96,19 @@ class ApiAuthController extends AbstractController
             ->setSuperAdmin(false);
 
         try {
+
             $userManager->updateUser($user);
+
         } catch (Exception $e) {
-            // todo : implement hateoas-bundle
-            // todo + fix when nothing is send in body
             $data = [
                 "message" => "Player is already registered, use the following link :",
                 "links" => [
                     "href" => "http://localhost:8000/api/auth/login",
                     "rel" => "login",
                     "type" => "POST",
-                ]
+                ],
             ];
+
             return new JsonResponse($data, 500);
         }
 

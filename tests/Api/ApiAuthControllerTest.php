@@ -45,6 +45,25 @@ class ApiAuthControllerTest extends AbstractController
 
     }
 
+    public function test_a_player_can_not_register_with_an_empty_body()
+    {
+        $data = [];
+
+        $this->client->request(
+            'POST',
+            self::URI, [], [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+            ],
+            json_encode($data)
+        );
+
+        $response = $this->client->getResponse();
+
+        // user is not created
+        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
+    }
+
     public function test_a_player_can_not_register_without_username()
     {
         $username = '';
