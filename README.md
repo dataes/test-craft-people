@@ -121,9 +121,5 @@ Then run the script to run tests without debug
 
 `bash runtests.sh`
 
-Include 'debug' parameter to run with debug
-
-`bash runtests.sh debug`
-
 
 
