@@ -48,6 +48,6 @@ class AbstractController extends WebTestCase
 
     public function tearDown()
     {
-//        (new SchemaTool($this->manager))->dropDatabase();
+        (new SchemaTool($this->manager))->dropDatabase();
     }
 }
