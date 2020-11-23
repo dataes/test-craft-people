@@ -112,7 +112,7 @@ To clear the cache, run the script with the environment parameter
 
 `bash cacl.sh dev`
 
-## Tests (todo)
+## Tests
 Shell into the PHP container
 
 `docker-compose exec php-fpm bash`
