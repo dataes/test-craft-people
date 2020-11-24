@@ -65,7 +65,7 @@ class ApiAuthController extends AbstractController
             $data = [
                 "message" => "Please do not forget to send the body request",
                 "links" => [
-                    "href" => "http://localhost:8000/api/doc",
+                    "href" => "http://localhost:8000/api/doc.json",
                 ],
             ];
 
@@ -109,14 +109,13 @@ class ApiAuthController extends AbstractController
                 ],
             ];
 
-            return new JsonResponse($data, 500);
+            return new JsonResponse($data, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        # Code 307 preserves the request method, while redirectToRoute() is a shortcut method.
         return $this->redirectToRoute('api_auth_login', [
             'username' => $data['username'],
             'password' => $data['password'],
-        ], 307);
+        ], Response::HTTP_TEMPORARY_REDIRECT);
     }
 
     /**
@@ -147,9 +146,25 @@ class ApiAuthController extends AbstractController
      * @param UserManagerInterface $userManager
      * @return JsonResponse|RedirectResponse
      */
-    public function login(Request $request, UserManagerInterface $userManager)
+    public function login(Request $request)
     {
-        // todo hack to show the doc of login but it doesn't go here
-        // todo + fix when nothing is send in body, loop
+        $data = json_decode(
+            $request->getContent(),
+            true
+        );
+
+        if (empty($data)) {
+
+            $data = [
+                "message" => "Please do not forget to send the body request",
+                "links" => [
+                    "href" => "http://localhost:8000/api/doc.json",
+                ],
+            ];
+
+            return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
+        }
+
+        //no return; it will go to fos_user bundle method todo understand how to implement it well
     }
 }

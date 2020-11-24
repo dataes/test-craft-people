@@ -10,10 +10,10 @@ class ApiAuthControllerTest extends AbstractController
 {
     const URI = '/api/auth/register';
 
-    public function test_a_player_can_register_is_created_and_is_redirect_to_login()
+    public function test_a_player_can_register_and_is_created_and_is_redirect_to_login()
     {
         $username = $this->faker->userName;
-        $password = $this->faker->userName; // todo put password, fix encoding issue with assertResponseRedirects()
+        $password = $this->faker->password;
         $email = $this->faker->email;
 
         $data = [
@@ -38,11 +38,11 @@ class ApiAuthControllerTest extends AbstractController
         $this->assertEquals($username, $user->getUsername());
         $this->assertEquals(['ROLE_PLAYER', 'ROLE_USER'], $user->getRoles());
         //user is redirected and logged
-        $this->assertResponseRedirects(
+        $this->assertSame(Response::HTTP_TEMPORARY_REDIRECT, $this->client->getResponse()->getStatusCode());
+        $this->assertSame(
             "/api/auth/login?username=$username&password=$password",
-            Response::HTTP_TEMPORARY_REDIRECT
+            urldecode($this->client->getResponse()->headers->get('Location'))
         );
-
     }
 
     public function test_a_player_can_not_register_with_an_empty_body()
@@ -130,7 +130,6 @@ class ApiAuthControllerTest extends AbstractController
     {
         $username = $this->faker->userName;
         $password = $this->faker->password;
-        $email = $this->faker->email;
 
         $data = [
             "username" => $username,

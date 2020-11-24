@@ -56,7 +56,6 @@ class UserVoter extends Voter
         $user = $token->getUser();
 
         if (!$user instanceof User) {
-            // the user must be logged in; if not, deny access
             return false;
         }
 
@@ -71,22 +70,24 @@ class UserVoter extends Voter
     }
 
     /**
+     * ROLE_SYSTEM can initialize a deck, can not pick a card.
+     *
      * @param User $user
      * @return bool
      */
     private function canInitializeDeck(User $user)
     {
-        // ROLE_SYSTEM can initialize a deck, can not pick a card.
         return in_array('ROLE_SYSTEM', $user->getRoles());
     }
 
     /**
+     * ROLE_PLAYER can pick a card, can not initialize a deck.
+     *
      * @param User $user
      * @return bool
      */
     private function canPickCard(User $user)
     {
-        // ROLE_PLAYER can pick a card, can not initialize a deck.
         return in_array('ROLE_PLAYER', $user->getRoles());
     }
 }
