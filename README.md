@@ -117,9 +117,13 @@ Shell into the PHP container
 
 `docker-compose exec php-fpm bash`
 
-Then run the script to run tests without debug
+Then run the script
 
 `bash runtests.sh`
+
+With coverage (/coverage/index.html)
+
+`bash runCoverage.sh`
 
 
 
