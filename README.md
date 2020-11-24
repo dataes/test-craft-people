@@ -121,7 +121,7 @@ Then run the script
 
 `bash runtests.sh`
 
-With coverage (/coverage/index.html)
+With coverage
 
 `bash runCoverage.sh`
 
