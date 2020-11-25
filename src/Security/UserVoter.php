@@ -35,7 +35,7 @@ class UserVoter extends Voter
      * @param mixed $subject
      * @return bool
      */
-    protected function supports($attribute, $subject)
+    protected function supports($attribute, $subject) : bool
     {
         // if the attribute isn't one we support, return false
         if (!in_array($attribute, [self::CAN_INITIALIZE_DECK, self::CAN_PICK_CARD])) {
@@ -55,7 +55,7 @@ class UserVoter extends Voter
      * @param TokenInterface $token
      * @return bool
      */
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
+    protected function voteOnAttribute($attribute, $subject, TokenInterface $token) : bool
     {
         $user = $token->getUser();
 
@@ -79,7 +79,7 @@ class UserVoter extends Voter
      * @param User $user
      * @return bool
      */
-    private function canInitializeDeck(User $user)
+    private function canInitializeDeck(User $user) : bool
     {
         return in_array(self::ROLE_SYSTEM, $user->getRoles());
     }
@@ -87,10 +87,10 @@ class UserVoter extends Voter
     /**
      * ROLE_PLAYER can pick a card, can not initialize a deck.
      *
-     * @param User $user
+     * @param User $user : bool
      * @return bool
      */
-    private function canPickCard(User $user)
+    private function canPickCard(User $user) : bool
     {
         return in_array(self::ROLE_PLAYER, $user->getRoles());
     }
