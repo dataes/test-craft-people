@@ -87,7 +87,7 @@ class UserVoterTest extends TestCase
     {
         $attribute = UserVoter::CAN_PICK_CARD;
         $subject = new User();
-        $subject->setRoles(['ROLE_PLAYER']);
+        $subject->setRoles([UserVoter::ROLE_PLAYER]);
         $token = $this->createMock(TokenInterface::class);
 
         $token->expects($this->once())
@@ -130,7 +130,26 @@ class UserVoterTest extends TestCase
     {
         $attribute = $this->faker->name;
         $subject = new User();
-        $subject->setRoles(['ROLE_PLAYER']);
+        $subject->setRoles([UserVoter::ROLE_PLAYER]);
+        $token = $this->createMock(TokenInterface::class);
+
+        $token->expects($this->once())
+            ->method('getUser')
+            ->willReturn($subject);
+
+        $reflectedMethod = $this->reflectVoteOnAttributeMethod();
+
+        $this->assertEquals(
+            false,
+            $reflectedMethod->invokeArgs(
+                $this->userVoter,
+                [$attribute, $subject, $token]
+            )
+        );
+
+        $attribute = $this->faker->name;
+        $subject = new User();
+        $subject->setRoles([UserVoter::ROLE_SYSTEM]);
         $token = $this->createMock(TokenInterface::class);
 
         $token->expects($this->once())
@@ -152,7 +171,26 @@ class UserVoterTest extends TestCase
     {
         $attribute = UserVoter::CAN_PICK_CARD;
         $subject = new User();
-        $subject->setRoles(['ROLE_PLAYER']);
+        $subject->setRoles([UserVoter::ROLE_PLAYER]);
+        $token = $this->createMock(TokenInterface::class);
+
+        $token->expects($this->once())
+            ->method('getUser')
+            ->willReturn($subject);
+
+        $reflectedMethod = $this->reflectVoteOnAttributeMethod();
+
+        $this->assertEquals(
+            true,
+            $reflectedMethod->invokeArgs(
+                $this->userVoter,
+                [$attribute, $subject, $token]
+            )
+        );
+
+        $attribute = UserVoter::CAN_INITIALIZE_DECK;
+        $subject = new User();
+        $subject->setRoles([UserVoter::ROLE_SYSTEM]);
         $token = $this->createMock(TokenInterface::class);
 
         $token->expects($this->once())
@@ -175,7 +213,7 @@ class UserVoterTest extends TestCase
     public function test_canInitializeDeck_return_true_if_role_system()
     {
         $subject = new User();
-        $subject->setRoles(['ROLE_SYSTEM']);
+        $subject->setRoles([UserVoter::ROLE_SYSTEM]);
 
         $reflectedMethod = $this->reflectCanInitializeDeckMethod();
 
@@ -191,7 +229,7 @@ class UserVoterTest extends TestCase
     public function test_canInitializeDeck_return_false_if_role_player()
     {
         $subject = new User();
-        $subject->setRoles(['ROLE_PLAYER']);
+        $subject->setRoles([UserVoter::ROLE_PLAYER]);
 
         $reflectedMethod = $this->reflectCanInitializeDeckMethod();
 
@@ -209,7 +247,7 @@ class UserVoterTest extends TestCase
     public function test_canPickCard_return_true_if_role_player()
     {
         $subject = new User();
-        $subject->setRoles(['ROLE_PLAYER']);
+        $subject->setRoles([UserVoter::ROLE_PLAYER]);
 
         $reflectedMethod = $this->reflectCanPickCardMethod();
 
@@ -225,7 +263,7 @@ class UserVoterTest extends TestCase
     public function test_canPickCard_return_false_if_role_system()
     {
         $subject = new User();
-        $subject->setRoles(['ROLE_SYSTEM']);
+        $subject->setRoles([UserVoter::ROLE_SYSTEM]);
 
         $reflectedMethod = $this->reflectCanPickCardMethod();
 

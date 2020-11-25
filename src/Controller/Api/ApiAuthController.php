@@ -109,7 +109,7 @@ class ApiAuthController extends AbstractController
                 ],
             ];
 
-            return new JsonResponse($data, Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
         }
 
         return $this->redirectToRoute('api_auth_login', [
@@ -142,6 +142,9 @@ class ApiAuthController extends AbstractController
      * @SWG\Tag(name="Login")
      * @Security(name="Bearer")
      *
+     * this declaration is only for the doc api and to put an extra check on empty data
+     * @todo find how to implement it correctly
+     *
      * @param Request $request
      * @param UserManagerInterface $userManager
      * @return JsonResponse|RedirectResponse
@@ -165,6 +168,5 @@ class ApiAuthController extends AbstractController
             return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
         }
 
-        //no return; it will go to fos_user bundle method todo understand how to implement it well
     }
 }

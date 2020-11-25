@@ -49,7 +49,7 @@ We will then review your assignment and do a Code Review together.
 SETUP
 ========
 
-A Symfony 4 project, with an API skeleton using JWT for user authentication.
+A Symfony 4 (LTS) project, with an API skeleton using JWT for user authentication.
 
 ## Installation
 
@@ -96,7 +96,7 @@ If you want to create the database with some fixtures, you may run the script
 
 ## Docker
 
-To run the application in development mode
+To run the application
 
 `docker-compose up -d`
 
@@ -119,11 +119,11 @@ Shell into the PHP container
 
 Then run the script
 
-`bash runtests.sh`
+`bash run-tests.sh`
 
 With coverage
 
-`bash runCoverage.sh`
+`bash run-tests-coverage.sh`
 
 
 

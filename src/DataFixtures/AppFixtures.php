@@ -10,7 +10,7 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager)
     {
 
-        // TODO
+        // @todo..
         // $user = new User();
         // $manager->persist($user);
 

@@ -9,8 +9,12 @@ use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface
 
 class UserVoter extends Voter
 {
+    // Permission
     const CAN_INITIALIZE_DECK = 'canInitialiseDeck';
     const CAN_PICK_CARD = 'canPickCard';
+    // Roles
+    const ROLE_PLAYER = 'ROLE_PLAYER';
+    const ROLE_SYSTEM = 'ROLE_SYSTEM';
 
     /**
      * @var AccessDecisionManagerInterface
@@ -77,7 +81,7 @@ class UserVoter extends Voter
      */
     private function canInitializeDeck(User $user)
     {
-        return in_array('ROLE_SYSTEM', $user->getRoles());
+        return in_array(self::ROLE_SYSTEM, $user->getRoles());
     }
 
     /**
@@ -88,6 +92,6 @@ class UserVoter extends Voter
      */
     private function canPickCard(User $user)
     {
-        return in_array('ROLE_PLAYER', $user->getRoles());
+        return in_array(self::ROLE_PLAYER, $user->getRoles());
     }
 }
