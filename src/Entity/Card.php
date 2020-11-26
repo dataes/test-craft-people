@@ -10,6 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Card
 {
+    const COLORS = ['RED', 'GREEN', 'BLUE', 'BLACK'];
+    const NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -57,6 +60,12 @@ class Card
 
     public function setColor(string $color): self
     {
+        if (!in_array($color, self::COLORS)) {
+            throw new \InvalidArgumentException(
+                "Color must be 'RED', 'GREEN', 'BLUE' or 'BLACK'"
+            );
+        }
+
         $this->color = $color;
 
         return $this;
@@ -69,6 +78,12 @@ class Card
 
     public function setNumber(int $number): self
     {
+        if (!in_array($number, self::NUMBERS)) {
+            throw new \InvalidArgumentException(
+                "Number must be 1, 2, 3, 4, 5, 6, 7, 8 or 9"
+            );
+        }
+
         $this->number = $number;
 
         return $this;
