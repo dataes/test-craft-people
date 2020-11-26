@@ -23,9 +23,8 @@
         <whitelist processUncoveredFilesFromWhitelist="false">
             <directory suffix=".php">src</directory>
             <exclude>
-                <file>DataFixtures/AppFixtures.php</file>
-                <file>Kernel.php</file>
-                <file>Entity/User.php</file>
+                <file>src/DataFixtures/AppFixtures.php</file>
+                <file>src/Kernel.php</file>
             </exclude>
         </whitelist>
     </filter>

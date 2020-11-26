@@ -143,14 +143,16 @@ class ApiAuthController extends AbstractController
      * @Security(name="Bearer")
      *
      * this declaration is only for the doc api and to put an extra check on empty data
-     * @todo find how to implement it correctly
+     * @todo find how to implement it correctly !
+     *
+     * @codeCoverageIgnore
      *
      * @param Request $request
-     * @param UserManagerInterface $userManager
      * @return JsonResponse|RedirectResponse
      */
     public function login(Request $request)
     {
+        // this code is reached only when sending no body through postman
         $data = json_decode(
             $request->getContent(),
             true

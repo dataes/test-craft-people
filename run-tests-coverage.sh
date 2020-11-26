@@ -1,3 +1,3 @@
 #!/bin/bash
 
-./bin/phpunit --coverage-html /tests/coverage/
+./bin/phpunit --coverage-html tests/coverage/
