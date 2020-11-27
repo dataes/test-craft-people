@@ -4,6 +4,7 @@ namespace App\Tests\Entities;
 
 use App\Entity\Card;
 use App\Entity\Deck;
+use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 
 class CardTest extends TestCase
@@ -11,7 +12,7 @@ class CardTest extends TestCase
     public function test_a_card_can_set_and_get_his_deck()
     {
         $card = Card::create('RED', 1);
-        $card->setDeck(new Deck());
+        $card->setDeck(Deck::create(new ArrayCollection([$card])));
         $this->assertInstanceOf(Deck::class, $card->getDeck());
     }
 

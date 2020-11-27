@@ -29,11 +29,29 @@ class Deck
      */
     private $user;
 
-    public function __construct()
-    {
+    /**
+     * Deck constructor.
+     */
+    private function __construct(){
         $this->cards = new ArrayCollection();
     }
 
+    /**
+     * @param ArrayCollection $cards
+     * @return Deck
+     */
+    public static function create(ArrayCollection $cards) : Deck
+    {
+        $deck = new Deck();
+        foreach ($cards as $card) {
+            $deck->addCard($card);
+        }
+        return $deck;
+    }
+
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
@@ -47,6 +65,10 @@ class Deck
         return $this->cards;
     }
 
+    /**
+     * @param Card $card
+     * @return $this
+     */
     public function addCard(Card $card): self
     {
         if (!$this->cards->contains($card)) {
@@ -57,6 +79,10 @@ class Deck
         return $this;
     }
 
+    /**
+     * @param Card $card
+     * @return $this
+     */
     public function removeCard(Card $card): self
     {
         if ($this->cards->removeElement($card)) {
@@ -69,11 +95,18 @@ class Deck
         return $this;
     }
 
+    /**
+     * @return User|null
+     */
     public function getUser(): ?User
     {
         return $this->user;
     }
 
+    /**
+     * @param User|null $user
+     * @return $this
+     */
     public function setUser(?User $user): self
     {
         $this->user = $user;

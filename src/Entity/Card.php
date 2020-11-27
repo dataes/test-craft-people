@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\CardRepository;
 use Doctrine\ORM\Mapping as ORM;
+use DomainException;
 
 /**
  * @ORM\Entity(repositoryClass=CardRepository::class)
@@ -12,11 +13,6 @@ final class Card
 {
     const COLORS = ['RED', 'GREEN', 'BLUE', 'BLACK'];
     const NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-    /**
-     * Card constructor.
-     */
-    private function __construct(){}
 
     /**
      * @ORM\Id
@@ -40,6 +36,11 @@ final class Card
      * @ORM\Column(type="integer")
      */
     private $number;
+
+    /**
+     * Card constructor.
+     */
+    private function __construct(){}
 
     /**
      * @param string $color
@@ -96,7 +97,7 @@ final class Card
     public function setColor(string $color): self
     {
         if (!in_array($color, self::COLORS)) {
-            throw new \DomainException(
+            throw new DomainException(
                 "Color must be 'RED', 'GREEN', 'BLUE' or 'BLACK'"
             );
         }
@@ -121,7 +122,7 @@ final class Card
     public function setNumber(int $number): self
     {
         if (!in_array($number, self::NUMBERS)) {
-            throw new \DomainException(
+            throw new DomainException(
                 "Number must be 1, 2, 3, 4, 5, 6, 7, 8 or 9"
             );
         }
