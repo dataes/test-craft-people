@@ -14,7 +14,7 @@ class DeckTest extends TestCase
     public function test_a_deck_can_add_and_get_and_remove_cards()
     {
         $deck = new Deck();
-        $deck->addCard(new Card());
+        $deck->addCard(Card::create('RED', 1));
         $this->assertInstanceOf(Card::class, $deck->getCards()->first());
         $deck->removeCard($deck->getCards()->first());
         $this->assertEmpty($deck->getCards());
