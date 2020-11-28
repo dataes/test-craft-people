@@ -23,6 +23,7 @@
         <whitelist processUncoveredFilesFromWhitelist="false">
             <directory suffix=".php">src</directory>
             <exclude>
+                <directory>src/Migrations</directory>
                 <file>src/DataFixtures/AppFixtures.php</file>
                 <file>src/Kernel.php</file>
             </exclude>

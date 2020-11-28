@@ -12,39 +12,47 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Deck[]    findAll()
  * @method Deck[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class DeckRepository extends ServiceEntityRepository
+class DeckRepository extends ServiceEntityRepository implements DeckRepositoryInterface
 {
+    /**
+     * @var \Doctrine\ORM\EntityManager|\Doctrine\ORM\EntityManagerInterface
+     */
+    private $entityManager;
+
+    /**
+     * DeckRepository constructor.
+     * @param ManagerRegistry $registry
+     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Deck::class);
+        $this->entityManager = $this->getEntityManager();
     }
 
-    // /**
-    //  * @return Deck[] Returns an array of Deck objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @param Deck $deck
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function save(Deck $deck)
     {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('d.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $this->entityManager->persist($deck);
+        $this->entityManager->flush();
 
-    /*
-    public function findOneBySomeField($value): ?Deck
-    {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $deck;
     }
-    */
+
+    /**
+     * @param Deck $deck
+     * @return Deck
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function remove(Deck $deck)
+    {
+        $this->entityManager->remove($deck);
+        $this->entityManager->flush();
+
+        return $deck;
+    }
 }

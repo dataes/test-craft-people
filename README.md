@@ -125,5 +125,17 @@ With coverage
 
 `bash run-tests-coverage.sh`
 
+==============================================================
 
-
+TODO
+========
+- Create 2 events with RabbitMQ
+- Finish covering tests for 100%
+- Refactoring some folders
+- Add fixtures
+- Use a library to do HATEOAS in api
+- Change library FOS/user-bundle
+- Fix multiple deprecations
+- Add more details annotation for doc api
+- Create a custom error handling
+- Cover more exceptions

@@ -6,6 +6,7 @@ use App\Repository\DeckRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use FOS\UserBundle\Model\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=DeckRepository::class)
@@ -20,7 +21,7 @@ class Deck
     private $id;
 
     /**
-     * @ORM\OneToMany(targetEntity=Card::class, mappedBy="deck", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Card::class, mappedBy="deck", orphanRemoval=true, cascade="persist")
      */
     private $cards;
 
@@ -32,7 +33,8 @@ class Deck
     /**
      * Deck constructor.
      */
-    private function __construct(){
+    private function __construct()
+    {
         $this->cards = new ArrayCollection();
     }
 
@@ -40,12 +42,13 @@ class Deck
      * @param ArrayCollection $cards
      * @return Deck
      */
-    public static function create(ArrayCollection $cards) : Deck
+    public static function create(ArrayCollection $cards): Deck
     {
         $deck = new Deck();
         foreach ($cards as $card) {
             $deck->addCard($card);
         }
+
         return $deck;
     }
 
@@ -104,10 +107,10 @@ class Deck
     }
 
     /**
-     * @param User|null $user
+     * @param UserInterface|null $user
      * @return $this
      */
-    public function setUser(?User $user): self
+    public function setUser(?UserInterface $user): self
     {
         $this->user = $user;
 

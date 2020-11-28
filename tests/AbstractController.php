@@ -36,6 +36,9 @@ class AbstractController extends WebTestCase
         $schemaTool->updateSchema($this->manager->getMetadataFactory()->getAllMetadata());
     }
 
+    /**
+     * @param $fixture
+     */
     protected function loadFixture($fixture)
     {
         $loader = new Loader();

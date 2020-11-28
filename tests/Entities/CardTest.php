@@ -39,7 +39,7 @@ class CardTest extends TestCase
     public function test_a_card_can_not_set_his_number_if_number_is_not_allowed()
     {
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage("Number must be 1, 2, 3, 4, 5, 6, 7, 8 or 9");
+        $this->expectExceptionMessage("Number not allowed");
         $card =  Card::create('BLUE', 10);
         $card->setNumber(10);
     }

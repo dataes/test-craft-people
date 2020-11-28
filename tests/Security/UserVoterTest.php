@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\UnitTests\Security;
+namespace App\Tests\Security;
 
 use App\Entity\User;
 use Faker\Factory;

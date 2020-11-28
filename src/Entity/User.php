@@ -21,19 +21,29 @@ class User extends BaseUser
     /**
      * @ORM\OneToOne(targetEntity=Deck::class, inversedBy="user", cascade={"persist", "remove"})
      */
-    private $deck;
+    protected $deck;
 
+    /**
+     * User constructor.
+     */
     public function __construct()
     {
         parent::__construct();
         // your own logic
     }
 
+    /**
+     * @return Deck|null
+     */
     public function getDeck(): ?Deck
     {
         return $this->deck;
     }
 
+    /**
+     * @param Deck|null $deck
+     * @return $this
+     */
     public function setDeck(?Deck $deck): self
     {
         $this->deck = $deck;

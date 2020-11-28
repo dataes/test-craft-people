@@ -12,39 +12,34 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Card[]    findAll()
  * @method Card[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CardRepository extends ServiceEntityRepository
+class CardRepository extends ServiceEntityRepository implements CardRepositoryInterface
 {
+    /**
+     * @var \Doctrine\ORM\EntityManager|\Doctrine\ORM\EntityManagerInterface
+     */
+    private $entityManager;
+
+    /**
+     * CardRepository constructor.
+     * @param ManagerRegistry $registry
+     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Card::class);
+        $this->entityManager = $this->getEntityManager();
     }
 
-    // /**
-    //  * @return Card[] Returns an array of Card objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @param Card $card
+     * @return Card
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function remove(Card $card)
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $this->entityManager->remove($card);
+        $this->entityManager->flush();
 
-    /*
-    public function findOneBySomeField($value): ?Card
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $card;
     }
-    */
 }
