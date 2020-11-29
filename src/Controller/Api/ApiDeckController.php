@@ -2,6 +2,8 @@
 
 namespace App\Controller\Api;
 
+use App\Event\DeckServiceEvent;
+use App\EventListener\DeckServiceListener;
 use Exception;
 use App\Service\DeckService;
 use App\Security\UserVoter;
@@ -9,6 +11,7 @@ use FOS\UserBundle\Model\UserManagerInterface;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use Swagger\Annotations as SWG;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,12 +28,21 @@ class ApiDeckController extends AbstractController
     private $deckService;
 
     /**
+     * @var EventDispatcher
+     */
+    private $dispatcher;
+
+    /**
      * ApiDeckController constructor.
      * @param DeckService $deckService
      */
     public function __construct(DeckService $deckService)
     {
         $this->deckService = $deckService;
+        $this->dispatcher = new EventDispatcher();
+        $this->dispatcher->addListener(DeckServiceListener::INITIALIZE,
+            [new DeckServiceListener(), 'onInitializeDeck']);
+        $this->dispatcher->addListener(DeckServiceListener::CARD_TAKEN, [new DeckServiceListener(), 'onCardTaken']);
     }
 
     /**
@@ -97,9 +109,10 @@ class ApiDeckController extends AbstractController
 
         try {
 
-            // @todo send an event instead
-
-            $this->deckService->initializeDeck($user);
+            $this->dispatcher->dispatch(
+                new DeckServiceEvent($this->deckService, $user),
+                DeckServiceListener::INITIALIZE
+            );
 
         } catch (Exception $e) {
             $data = [
@@ -133,8 +146,6 @@ class ApiDeckController extends AbstractController
      * @SWG\Tag(name="Pick a card")
      * @Security(name="Bearer")
      *
-     * @param Request $request
-     * @param UserManagerInterface $userManager
      * @return JsonResponse
      */
     public function pick()
@@ -160,13 +171,22 @@ class ApiDeckController extends AbstractController
 
         // Initialize a new deck if no cards anymore
         if ($cardsLeft === 0) {
-            // @todo send the event instead
-            $this->deckService->initializeDeck($user);
+
+            $this->dispatcher->dispatch(
+                new DeckServiceEvent($this->deckService, $user),
+                DeckServiceListener::INITIALIZE
+            );
+
         }
 
         try {
-            // @todo send an event
-            $card = $this->deckService->pickRandomCard($deck);
+
+            $listener = new DeckServiceEvent($this->deckService, $user);
+            $this->dispatcher->dispatch(
+                $listener,
+                DeckServiceListener::CARD_TAKEN
+            );
+            $card = $listener->getCard();
 
         } catch (Exception $e) {
             $data = [

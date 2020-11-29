@@ -42,8 +42,6 @@ class DeckService
      */
     public function initializeDeck(User $user): Deck
     {
-        // @todo This method should result of an event with RabbitMQ ..
-
         $userDeck = $user->getDeck();
 
         if ($userDeck) {
@@ -63,8 +61,6 @@ class DeckService
      */
     public function pickRandomCard(Deck $deck): Card
     {
-        // @todo This method should result of an event with RabbitMQ ..
-
         $cards = $deck->getCards()->toArray();
 
         $cardPicked = $cards[array_rand($cards)];

@@ -2,7 +2,7 @@ version: "3.1"
 
 volumes:
     db-data:
-    rabbit_mq:
+#    rabbit_mq:
 
 networks:
     local:
@@ -65,14 +65,15 @@ services:
         - local
 
     # The RabbitMQ container.
-    rabbitmq:
-      build:
-        context: .
-        dockerfile: docker/Dockerfile-rabbitmq
-      volumes:
-        - ./rabbitmq:/var/lib/rabbitmq:cached
-      networks:
-        - local
+  # @todo see Dockerfile, for now I use normal event dispatcher from symfony.
+#    rabbitmq:
+#      build:
+#        context: .
+#        dockerfile: docker/Dockerfile-rabbitmq
+#      volumes:
+#        - ./rabbitmq:/var/lib/rabbitmq:cached
+#      networks:
+#        - local
 
     # DB connection & admin
     adminer:

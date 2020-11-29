@@ -1,4 +1,6 @@
 FROM phpdockerio/php72-fpm:latest
+#@todo change php image in order to user rabbit mq
+
 WORKDIR "/application"
 
 # Install selected extensions and other stuff
@@ -16,7 +18,8 @@ RUN apt-get update \
     && apt-get install git-flow
 
 
-#@todo "Setup the Messenger Component" enable the AMQP PHP extension in the PHP Docker image to be able to dispatch messages.
+# @todo "Setup the Messenger Component" enable the AMQP PHP extension in the PHP Docker image to be able to dispatch messages.
+# (for now I will use the normal EventDispatcher as with ubuntu and this image, it's difficult to setup..)
 
 # attempt......
 #RUN apt-get update && apt-get install -y --no-install-recommends \

@@ -129,9 +129,9 @@ With coverage
 
 TODO
 ========
-- Create 2 events with RabbitMQ
+- events with RabbitMQ (for now I am using the normal symfony EventDispatcher)
 - Finish covering tests for 100%
-- Refactoring some folders
+- Refactoring some folders structure depreciated
 - Add fixtures
 - Use a library to do HATEOAS in api
 - Change library FOS/user-bundle
@@ -139,3 +139,4 @@ TODO
 - Add more details annotation for doc api
 - Create a custom error handling
 - Cover more exceptions
+- add logs
