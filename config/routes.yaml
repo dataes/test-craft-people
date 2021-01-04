@@ -2,6 +2,14 @@ api_auth_login:
     path: /api/auth/login
     methods:  [POST]
 
+api_deck_init:
+    path: /api/deck/init
+    methods:  [POST]
+
+api_pick_card:
+    path: /api/deck/pick/card
+    methods:  [GET]
+
 api:
     prefix: /api
     resource: '../src/Controller/Api'

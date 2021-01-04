@@ -3,15 +3,22 @@
 namespace App\Controller\Api;
 
 use Exception;
+use App\Entity\User;
 use FOS\UserBundle\Model\UserManagerInterface;
+use Nelmio\ApiDocBundle\Annotation\Security;
+use Swagger\Annotations as SWG;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use App\Entity\User;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validation;
-use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Collection;
 
 /**
  * @Route("/auth")
@@ -20,6 +27,28 @@ class ApiAuthController extends AbstractController
 {
     /**
      * @Route("/register", name="api_auth_register",  methods={"POST"})
+     *
+     * @SWG\Response(
+     *     response=200,
+     *     description="Create a new user player and redirect to login endpoint"
+     * )
+     * @SWG\Parameter(
+     *     name="body",
+     *     in="body",
+     *     required=true,
+     *     description="Send parameters in body with a JSON format like :",
+     *
+     *     @SWG\Schema(
+     *     type="object",
+     *     example={"username": "john", "password": "doe", "email":"johnDoe@gmail.com"},
+     *         @SWG\Property(property="username", type="string", minLength=3),
+     *         @SWG\Property(property="password", type="string", minLength=3),
+     *         @SWG\Property(property="email", type="email")
+     *     )
+     * )
+     * @SWG\Tag(name="Register")
+     * @Security(name="Bearer")
+     *
      * @param Request $request
      * @param UserManagerInterface $userManager
      * @return JsonResponse|RedirectResponse
@@ -31,19 +60,30 @@ class ApiAuthController extends AbstractController
             true
         );
 
+        if (empty($data)) {
+
+            $data = [
+                "message" => "Please do not forget to send the body request",
+                "links" => [
+                    "href" => "http://localhost:8000/api/doc.json",
+                ],
+            ];
+
+            return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
+        }
+
         $validator = Validation::createValidator();
 
-        $constraint = new Assert\Collection(array(
-            // the keys correspond to the keys in the input array
-            'username' => new Assert\Length(array('min' => 1)),
-            'password' => new Assert\Length(array('min' => 1)),
-            'email' => new Assert\Email(),
+        $constraint = new Collection(array(
+            'username' => [new Length(['min' => 3]), new NotBlank(), new NotNull()],
+            'password' => [new Length(['min' => 3]), new NotBlank(), new NotNull()],
+            'email' => [new Email(), new NotBlank(), new NotNull()],
         ));
 
         $violations = $validator->validate($data, $constraint);
 
         if ($violations->count() > 0) {
-            return new JsonResponse(["error" => (string)$violations], 500);
+            return new JsonResponse(["error" => (string)$violations], Response::HTTP_BAD_REQUEST);
         }
 
         $user = new User();
@@ -56,15 +96,79 @@ class ApiAuthController extends AbstractController
             ->setSuperAdmin(false);
 
         try {
+
             $userManager->updateUser($user);
+
         } catch (Exception $e) {
-            return new JsonResponse(["error" => $e->getMessage()], 500);
+            $data = [
+                "message" => "Player is already registered, use the following link :",
+                "links" => [
+                    "href" => "http://localhost:8000/api/auth/login",
+                    "rel" => "login",
+                    "type" => "POST",
+                ],
+            ];
+
+            return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
         }
 
-        # Code 307 preserves the request method, while redirectToRoute() is a shortcut method.
         return $this->redirectToRoute('api_auth_login', [
             'username' => $data['username'],
             'password' => $data['password'],
-        ], 307);
+        ], Response::HTTP_TEMPORARY_REDIRECT);
+    }
+
+    /**
+     * @Route("/login", name="api_auth_login",  methods={"POST"})
+     *
+     * @SWG\Response(
+     *     response=200,
+     *     description="Log into the application and receive a new JWT"
+     * )
+     * @SWG\Parameter(
+     *     name="body",
+     *     in="body",
+     *     required=true,
+     *     description="Send parameters in body with a JSON format like :",
+     *
+     *     @SWG\Schema(
+     *     type="object",
+     *     example={"username": "john", "password": "doe", "email":"johnDoe@gmail.com"},
+     *         @SWG\Property(property="username", type="string"),
+     *         @SWG\Property(property="password", type="string"),
+     *         @SWG\Property(property="email", type="string")
+     *     )
+     * )
+     * @SWG\Tag(name="Login")
+     * @Security(name="Bearer")
+     *
+     * this declaration is only for the doc api and to put an extra check on empty data
+     * @todo find how to implement it correctly !
+     *
+     * @codeCoverageIgnore
+     *
+     * @param Request $request
+     * @return JsonResponse|RedirectResponse
+     */
+    public function login(Request $request)
+    {
+        // this code is reached only when sending no body through postman
+        $data = json_decode(
+            $request->getContent(),
+            true
+        );
+
+        if (empty($data)) {
+
+            $data = [
+                "message" => "Please do not forget to send the body request",
+                "links" => [
+                    "href" => "http://localhost:8000/api/doc.json",
+                ],
+            ];
+
+            return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
+        }
+
     }
 }
