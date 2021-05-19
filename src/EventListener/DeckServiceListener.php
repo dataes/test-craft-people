@@ -2,7 +2,6 @@
 
 namespace App\EventListener;
 
-use App\Entity\Card;
 use App\Event\DeckServiceEvent;
 
 /**
@@ -11,13 +10,7 @@ use App\Event\DeckServiceEvent;
  */
 class DeckServiceListener
 {
-    /**
-     *
-     */
     const INITIALIZE = 'deck.initialize.event';
-    /**
-     *
-     */
     const CARD_TAKEN = 'deck.card.taken.event';
 
     /**

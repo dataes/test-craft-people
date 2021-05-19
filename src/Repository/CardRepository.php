@@ -4,6 +4,10 @@ namespace App\Repository;
 
 use App\Entity\Card;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -15,7 +19,7 @@ use Doctrine\Persistence\ManagerRegistry;
 class CardRepository extends ServiceEntityRepository implements CardRepositoryInterface
 {
     /**
-     * @var \Doctrine\ORM\EntityManager|\Doctrine\ORM\EntityManagerInterface
+     * @var EntityManager|EntityManagerInterface
      */
     private $entityManager;
 
@@ -32,10 +36,10 @@ class CardRepository extends ServiceEntityRepository implements CardRepositoryIn
     /**
      * @param Card $card
      * @return Card
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function remove(Card $card)
+    public function remove(Card $card): Card
     {
         $this->entityManager->remove($card);
         $this->entityManager->flush();

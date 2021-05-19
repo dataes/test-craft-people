@@ -5,6 +5,7 @@ namespace App\Event;
 use App\Entity\Card;
 use App\Entity\User;
 use App\Service\DeckService;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
@@ -17,10 +18,12 @@ class DeckServiceEvent extends Event
      * @var User
      */
     private $user;
+
     /**
      * @var DeckService
      */
     private $deckService;
+
     /**
      * @var Card
      */
@@ -29,9 +32,9 @@ class DeckServiceEvent extends Event
     /**
      * DeckServiceEvent constructor.
      * @param DeckService $deckService
-     * @param User $user
+     * @param UserInterface $user
      */
-    public function __construct(DeckService $deckService, User $user)
+    public function __construct(DeckService $deckService, UserInterface $user)
     {
         $this->user = $user;
         $this->deckService = $deckService;

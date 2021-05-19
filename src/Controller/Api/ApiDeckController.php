@@ -40,8 +40,7 @@ class ApiDeckController extends AbstractController
     {
         $this->deckService = $deckService;
         $this->dispatcher = new EventDispatcher();
-        $this->dispatcher->addListener(DeckServiceListener::INITIALIZE,
-            [new DeckServiceListener(), 'onInitializeDeck']);
+        $this->dispatcher->addListener(DeckServiceListener::INITIALIZE, [new DeckServiceListener(), 'onInitializeDeck']);
         $this->dispatcher->addListener(DeckServiceListener::CARD_TAKEN, [new DeckServiceListener(), 'onCardTaken']);
     }
 
@@ -66,7 +65,7 @@ class ApiDeckController extends AbstractController
      * @param UserManagerInterface $userManager
      * @return JsonResponse
      */
-    public function initialize(Request $request, UserManagerInterface $userManager)
+    public function initialize(Request $request, UserManagerInterface $userManager): JsonResponse
     {
         $user = $userManager->findUserBy(['id' => $request->get('player_id')]);
 
@@ -82,9 +81,7 @@ class ApiDeckController extends AbstractController
         }
 
         try {
-
             $this->denyAccessUnlessGranted(UserVoter::CAN_INITIALIZE_DECK, $user);
-
         } catch (Exception $e) {
             $data = [
                 "message" => "As a player, you can not initialize a deck.",
@@ -108,12 +105,10 @@ class ApiDeckController extends AbstractController
         }
 
         try {
-
             $this->dispatcher->dispatch(
                 new DeckServiceEvent($this->deckService, $user),
                 DeckServiceListener::INITIALIZE
             );
-
         } catch (Exception $e) {
             $data = [
                 "message" => $e->getMessage(),
@@ -148,7 +143,7 @@ class ApiDeckController extends AbstractController
      *
      * @return JsonResponse
      */
-    public function pick()
+    public function pick(): JsonResponse
     {
         $user = $this->getUser();
         $userId = $user->getId();
@@ -169,25 +164,13 @@ class ApiDeckController extends AbstractController
 
         $cardsLeft = $deck->getCards()->count() - 1;
 
-        // Initialize a new deck if no cards anymore
-        if ($cardsLeft === 0) {
-
-            $this->dispatcher->dispatch(
-                new DeckServiceEvent($this->deckService, $user),
-                DeckServiceListener::INITIALIZE
-            );
-
-        }
-
         try {
-
             $listener = new DeckServiceEvent($this->deckService, $user);
             $this->dispatcher->dispatch(
                 $listener,
                 DeckServiceListener::CARD_TAKEN
             );
             $card = $listener->getCard();
-
         } catch (Exception $e) {
             $data = [
                 "message" => $e->getMessage(),
@@ -205,6 +188,16 @@ class ApiDeckController extends AbstractController
                 "href" => "http://localhost:8000/api/doc.json",
             ],
         ];
+
+        // Initialize a new deck if no cards anymore
+        if ($cardsLeft === 0) {
+
+            $this->dispatcher->dispatch(
+                new DeckServiceEvent($this->deckService, $user),
+                DeckServiceListener::INITIALIZE
+            );
+
+        }
 
         return new JsonResponse($data, Response::HTTP_OK);
     }

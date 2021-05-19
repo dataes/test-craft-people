@@ -96,9 +96,7 @@ class ApiAuthController extends AbstractController
             ->setSuperAdmin(false);
 
         try {
-
             $userManager->updateUser($user);
-
         } catch (Exception $e) {
             $data = [
                 "message" => "Player is already registered, use the following link :",

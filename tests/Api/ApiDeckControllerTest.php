@@ -138,11 +138,6 @@ class ApiDeckControllerTest extends AbstractController
         $this->assertSame(Response::HTTP_UNAUTHORIZED, $this->client->getResponse()->getStatusCode());
     }
 
-//    public function test_deck_initialize_is_call_if_no_cards_left()
-//    {
-//       // todo
-//    }
-
     /**
      * @param $role
      * @return object

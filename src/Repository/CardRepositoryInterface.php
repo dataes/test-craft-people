@@ -8,7 +8,7 @@ interface CardRepositoryInterface
 {
     // Adding in const will result in new kind of cards when a deck is created
     const COLORS = ['RED', 'GREEN', 'BLUE', 'BLACK'];
-    const NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    const NUMBERS = [1, 2];
 
     /**
      * @param Card $card

@@ -29,6 +29,7 @@ class DeckService
     /**
      * DeckService constructor.
      * @param DeckRepositoryInterface $deckRepository
+     * @param CardRepositoryInterface $cardRepository
      */
     public function __construct(DeckRepositoryInterface $deckRepository, CardRepositoryInterface $cardRepository)
     {
