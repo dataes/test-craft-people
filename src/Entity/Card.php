@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use App\Repository\CardRepository;
 use Doctrine\ORM\Mapping as ORM;
-use DomainException;
+use InvalidArgumentException;
 
 /**
  * @ORM\Entity(repositoryClass=CardRepository::class)
@@ -94,7 +94,7 @@ class Card
     public function setColor(string $color): self
     {
         if (!in_array($color, CardRepository::COLORS)) {
-            throw new DomainException(
+            throw new InvalidArgumentException(
                 "Color must be 'RED', 'GREEN', 'BLUE' or 'BLACK'"
             );
         }
@@ -119,7 +119,7 @@ class Card
     public function setNumber(int $number): self
     {
         if (!in_array($number, CardRepository::NUMBERS)) {
-            throw new DomainException(
+            throw new InvalidArgumentException(
                 "Number not allowed"
             );
         }

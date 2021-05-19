@@ -30,7 +30,7 @@ class CardTest extends TestCase
 
     public function test_a_card_can_not_set_his_color_if_color_is_not_allowed()
     {
-        $this->expectException(\DomainException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage("Color must be 'RED', 'GREEN', 'BLUE' or 'BLACK'");
         $card =  Card::create('PINK', 4);
         $card->setColor('PINK');
@@ -38,7 +38,7 @@ class CardTest extends TestCase
 
     public function test_a_card_can_not_set_his_number_if_number_is_not_allowed()
     {
-        $this->expectException(\DomainException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage("Number not allowed");
         $card =  Card::create('BLUE', 10);
         $card->setNumber(10);
