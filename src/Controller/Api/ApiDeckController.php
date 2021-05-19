@@ -191,12 +191,10 @@ class ApiDeckController extends AbstractController
 
         // Initialize a new deck if no cards anymore
         if ($cardsLeft === 0) {
-
             $this->dispatcher->dispatch(
                 new DeckServiceEvent($this->deckService, $user),
                 DeckServiceListener::INITIALIZE
             );
-
         }
 
         return new JsonResponse($data, Response::HTTP_OK);

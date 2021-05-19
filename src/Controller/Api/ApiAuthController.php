@@ -61,7 +61,6 @@ class ApiAuthController extends AbstractController
         );
 
         if (empty($data)) {
-
             $data = [
                 "message" => "Please do not forget to send the body request",
                 "links" => [
@@ -141,14 +140,13 @@ class ApiAuthController extends AbstractController
      * @Security(name="Bearer")
      *
      * this declaration is only for the doc api and to put an extra check on empty data
-     * @todo find how to implement it correctly !
      *
      * @codeCoverageIgnore
      *
      * @param Request $request
-     * @return JsonResponse|RedirectResponse
+     * @return JsonResponse
      */
-    public function login(Request $request)
+    public function login(Request $request): JsonResponse
     {
         // this code is reached only when sending no body through postman
         $data = json_decode(
