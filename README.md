@@ -127,6 +127,12 @@ With coverage
 
 ==============================================================
 
+## DB Schema
+
+![img.png](img.png)
+
+==============================================================
+
 TODO
 ========
 - events with RabbitMQ (for now I am using the normal symfony EventDispatcher)
