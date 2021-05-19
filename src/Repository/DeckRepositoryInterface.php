@@ -10,11 +10,11 @@ interface DeckRepositoryInterface
      * @param Deck $deck
      * @return Deck
      */
-    public function save(Deck $deck);
+    public function save(Deck $deck): Deck;
 
     /**
      * @param Deck $deck
      * @return Deck
      */
-    public function remove(Deck $card);
+    public function remove(Deck $deck): Deck;
 }

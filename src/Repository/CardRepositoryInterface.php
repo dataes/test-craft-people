@@ -14,5 +14,5 @@ interface CardRepositoryInterface
      * @param Card $card
      * @return Card
      */
-    public function remove(Card $card);
+    public function remove(Card $card): Card;
 }
