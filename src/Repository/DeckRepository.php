@@ -4,6 +4,10 @@ namespace App\Repository;
 
 use App\Entity\Deck;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -15,7 +19,7 @@ use Doctrine\Persistence\ManagerRegistry;
 class DeckRepository extends ServiceEntityRepository implements DeckRepositoryInterface
 {
     /**
-     * @var \Doctrine\ORM\EntityManager|\Doctrine\ORM\EntityManagerInterface
+     * @var EntityManager|EntityManagerInterface
      */
     private $entityManager;
 
@@ -31,10 +35,11 @@ class DeckRepository extends ServiceEntityRepository implements DeckRepositoryIn
 
     /**
      * @param Deck $deck
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @return Deck
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function save(Deck $deck)
+    public function save(Deck $deck): Deck
     {
         $this->entityManager->persist($deck);
         $this->entityManager->flush();
@@ -45,10 +50,10 @@ class DeckRepository extends ServiceEntityRepository implements DeckRepositoryIn
     /**
      * @param Deck $deck
      * @return Deck
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function remove(Deck $deck)
+    public function remove(Deck $deck): Deck
     {
         $this->entityManager->remove($deck);
         $this->entityManager->flush();
